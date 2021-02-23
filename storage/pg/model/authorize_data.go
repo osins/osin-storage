@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"time"
 
-	"github.com/wangsying/osin"
+	"github.com/openshift/osin"
 	"github.com/wangsying/osin-storage/storage/pg/dbtype"
 )
 

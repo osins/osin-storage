@@ -3,7 +3,7 @@ package pg
 import (
 	"fmt"
 
-	"github.com/wangsying/osin"
+	"github.com/openshift/osin"
 )
 
 func NewPgStorage() osin.Storage {
