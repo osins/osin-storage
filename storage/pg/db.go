@@ -73,6 +73,7 @@ func Migrate() {
 		&model.Client{},
 		&model.AuthorizeData{},
 		&model.AccessData{},
+		&model.User{},
 	)
 
 	for _, t := range tables {
