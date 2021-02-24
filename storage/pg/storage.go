@@ -137,19 +137,30 @@ func (s *storage) LoadAccess(accessToken string) (*osin.AccessData, error) {
 	fmt.Printf("LoadAccess: %s\n", accessToken)
 
 	d := &model.AccessData{}
-	s.db.Model(d).Where("access_token", accessToken).Find(d)
-	if d.AccessToken == accessToken {
-		c := &model.Client{}
-		s.db.Model(c).Where("id", d.ClientId).Find(c)
-
-		ret := d.Osin()
-		ret.Client = c.Osin()
-
-		return ret, nil
+	err := s.db.Model(d).Where("access_token", accessToken).Find(d).Error
+	if err != nil {
+		return nil, err
 	}
 
-	fmt.Printf("access not exists.")
-	return nil, osin.ErrNotFound
+	c := &model.Client{}
+	err = s.db.Model(c).Where("id", d.ClientId).Find(c).Error
+	if err != nil {
+		return nil, err
+	}
+
+	ret := d.Osin()
+	ret.Client = c.Osin()
+
+	u := &model.User{}
+
+	if len(d.UserId) > 0 {
+		err = s.db.Model(u).Where("id", d.UserId).First(u).Error
+		if err == nil {
+			ret.UserData = u
+		}
+	}
+
+	return ret, nil
 }
 
 func (s *storage) RemoveAccess(accessToken string) error {

@@ -13,7 +13,7 @@ type User struct {
 
 	Username string
 
-	Password string
+	Password string `json:"-"`
 
 	EMail string
 

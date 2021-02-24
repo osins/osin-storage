@@ -14,6 +14,8 @@ type AccessData struct {
 
 	ClientId string
 
+	UserId string
+
 	Code string
 
 	// Refresh Token. Can be blank
