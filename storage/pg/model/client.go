@@ -2,7 +2,6 @@ package model
 
 import (
 	"encoding/json"
-	"fmt"
 	"time"
 
 	"github.com/openshift/osin"
@@ -46,11 +45,7 @@ func (d *Client) Copy(client osin.Client) *Client {
 	d.Secret = client.GetSecret()
 	d.RedirectUri = client.GetRedirectUri()
 
-	u, err := json.Marshal(client.GetUserData())
-	fmt.Printf("\nosin.Client to model.Client: \n%s\n%s\n", client.GetUserData(), u)
-	if err != nil {
-		fmt.Printf("\nosin.Client to model.Client error: \n%s\n%s\n%s\n", client.GetUserData(), u, err.Error())
-	}
+	u, _ := json.Marshal(client.GetUserData())
 
 	d.UserData = u
 	return d

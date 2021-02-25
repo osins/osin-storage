@@ -31,7 +31,6 @@ func DB() *gorm.DB {
 				Colorful:      false,         // Disable color
 			},
 		)
-		fmt.Printf(getPostgresDSN())
 		db, err := gorm.Open(postgres.Open(getPostgresDSN()), &gorm.Config{
 			Logger:                                   newLogger,
 			DisableForeignKeyConstraintWhenMigrating: true,
@@ -77,10 +76,8 @@ func Migrate() {
 	)
 
 	for _, t := range tables {
-		fmt.Printf("migrate table: %T\n", t)
 		err := gormInstance.AutoMigrate(t)
 		if err != nil {
-			fmt.Printf("error: %s", err.Error())
 			return
 		}
 	}

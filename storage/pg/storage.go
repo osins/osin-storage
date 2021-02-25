@@ -1,7 +1,6 @@
 package pg
 
 import (
-	"encoding/json"
 	"fmt"
 	"time"
 
@@ -30,21 +29,17 @@ func (s *storage) Close() {
 }
 
 func (s *storage) GetClient(id string) (osin.Client, error) {
-	fmt.Printf("GetClient: %s\n", id)
 
 	c := &model.Client{}
 	s.db.Model(c).Where("id", id).Find(c)
 	if c != nil {
-		fmt.Printf("query client, find client id: %s.\n", c.Id)
 		return c, nil
 	}
 
-	fmt.Printf("query client, not exists.\n")
 	return nil, osin.ErrNotFound
 }
 
 func (s *storage) SetClient(id string, client osin.Client) error {
-	fmt.Printf("SetClient: %s\n", id)
 
 	c := &model.Client{}
 
@@ -61,7 +56,6 @@ func (s *storage) SetClient(id string, client osin.Client) error {
 }
 
 func (s *storage) SaveAuthorize(data *osin.AuthorizeData) error {
-	fmt.Printf("SaveAuthorize: %s\n", data.Code)
 
 	d := &model.AuthorizeData{}
 	con := &model.AuthorizeData{Client: &model.Client{Id: data.Client.GetId()}, Code: data.Code}
@@ -69,13 +63,6 @@ func (s *storage) SaveAuthorize(data *osin.AuthorizeData) error {
 	s.db.Where(con).Find(d)
 	if d.Code == "" {
 		d.Copy(data)
-
-		b, err := json.Marshal(d)
-		if err != nil {
-			fmt.Println(err)
-			return err
-		}
-		fmt.Println(string(b))
 
 		s.db.Model(d).Create(d)
 		return nil
@@ -85,7 +72,6 @@ func (s *storage) SaveAuthorize(data *osin.AuthorizeData) error {
 }
 
 func (s *storage) LoadAuthorize(code string) (*osin.AuthorizeData, error) {
-	fmt.Printf("LoadAuthorize: %s\n", code)
 	d := &model.AuthorizeData{}
 	s.db.Model(d).Where("code", code).Find(d)
 	if d != nil {
@@ -112,14 +98,12 @@ func (s *storage) LoadAuthorize(code string) (*osin.AuthorizeData, error) {
 }
 
 func (s *storage) RemoveAuthorize(code string) error {
-	fmt.Printf("RemoveAuthorize: %s\n", code)
 	d := &model.AuthorizeData{}
 	s.db.Model(d).Where("code", code).Delete(d)
 	return nil
 }
 
 func (s *storage) SaveAccess(data *osin.AccessData) error {
-	fmt.Printf("SaveAccess: %s\n", data.AccessToken)
 
 	d := &model.AccessData{}
 	s.db.Model(d).Where("access_token", data.AccessToken).Find(d)
@@ -134,7 +118,6 @@ func (s *storage) SaveAccess(data *osin.AccessData) error {
 }
 
 func (s *storage) LoadAccess(accessToken string) (*osin.AccessData, error) {
-	fmt.Printf("LoadAccess: %s\n", accessToken)
 
 	d := &model.AccessData{}
 	err := s.db.Model(d).Where("access_token", accessToken).Find(d).Error
@@ -164,7 +147,6 @@ func (s *storage) LoadAccess(accessToken string) (*osin.AccessData, error) {
 }
 
 func (s *storage) RemoveAccess(accessToken string) error {
-	fmt.Printf("RemoveAccess: %s\n", accessToken)
 	d := &model.AccessData{}
 	s.db.Model(d).Where("access_token", accessToken).Delete(d)
 
@@ -172,7 +154,6 @@ func (s *storage) RemoveAccess(accessToken string) error {
 }
 
 func (s *storage) LoadRefresh(refreshToken string) (*osin.AccessData, error) {
-	fmt.Printf("LoadRefresh: %s\n", refreshToken)
 
 	d := &model.AccessData{}
 	s.db.Model(d).Where("refresh_token", refreshToken).Find(d)
@@ -190,7 +171,6 @@ func (s *storage) LoadRefresh(refreshToken string) (*osin.AccessData, error) {
 }
 
 func (s *storage) RemoveRefresh(refreshToken string) error {
-	fmt.Printf("RemoveRefresh: %s\n", refreshToken)
 
 	d := &model.AccessData{}
 	s.db.Model(d).Where("refresh_token", refreshToken).Delete(d)
