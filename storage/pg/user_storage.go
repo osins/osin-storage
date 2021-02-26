@@ -1,8 +1,8 @@
 package pg
 
 import (
-	"github.com/wangsying/osin-simple/simple"
-	"github.com/wangsying/osin-storage/storage/pg/model"
+	"github.com/osins/osin-simple/simple"
+	"github.com/osins/osin-storage/storage/pg/model"
 	"gorm.io/gorm"
 )
 

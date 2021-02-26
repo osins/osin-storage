@@ -2,7 +2,7 @@ package pg
 
 import (
 	"github.com/openshift/osin"
-	"github.com/wangsying/osin-storage/storage/pg/model"
+	"github.com/osins/osin-storage/storage/pg/model"
 	"gorm.io/gorm"
 )
 

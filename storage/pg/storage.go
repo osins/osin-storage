@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/openshift/osin"
-	"github.com/wangsying/osin-storage/storage/pg/model"
+	"github.com/osins/osin-storage/storage/pg/model"
 	"gorm.io/gorm"
 )
 
@@ -137,8 +137,7 @@ func (s *storage) LoadAccess(accessToken string) (*osin.AccessData, error) {
 	u := &model.User{}
 
 	if len(d.UserId) > 0 {
-		err = s.db.Model(u).Where("id", d.UserId).First(u).Error
-		if err == nil {
+		if err = s.db.Model(u).Where("id", d.UserId).First(u).Error; err == nil {
 			ret.UserData = u
 		}
 	}

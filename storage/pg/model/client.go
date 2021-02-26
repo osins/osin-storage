@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/openshift/osin"
-	"github.com/wangsying/osin-storage/storage/pg/dbtype"
+	"github.com/osins/osin-storage/storage/pg/dbtype"
 	"gorm.io/gorm"
 )
 

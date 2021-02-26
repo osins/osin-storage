@@ -9,7 +9,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/wangsying/osin-storage/storage/pg/model"
+	"github.com/osins/osin-storage/storage/pg/model"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
