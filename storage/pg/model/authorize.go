@@ -55,11 +55,19 @@ func (d *Authorize) GetCode() string {
 
 // GetClient func define
 func (d *Authorize) GetClient() face.Client {
+	if len(d.ClientId) == 0 {
+		return nil
+	}
+
 	return d.Client
 }
 
 // GetUser func define
 func (d *Authorize) GetUser() face.User {
+	if len(d.UserId) == 0 {
+		return nil
+	}
+
 	return d.User
 }
 

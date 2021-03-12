@@ -47,11 +47,19 @@ func (s *Access) GetRefreshToken() string {
 
 // GetClient method define
 func (s *Access) GetClient() face.Client {
+	if len(s.ClientId) == 0 {
+		return nil
+	}
+
 	return s.Client
 }
 
 // GetUser method define
 func (s *Access) GetUser() face.User {
+	if len(s.UserId) == 0 {
+		return nil
+	}
+
 	return s.User
 }
 

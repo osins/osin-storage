@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"time"
 
-	simple_config "github.com/osins/osin-simple/simple/config"
 	simple_face "github.com/osins/osin-simple/simple/model/face"
 	simple_storage "github.com/osins/osin-simple/simple/storage"
 	"github.com/osins/osin-storage/storage/pg/model"
@@ -34,18 +33,29 @@ func (s *authorizeStorage) Get(code string) (simple_face.Authorize, error) {
 		return nil, err
 	}
 
+	if d.ExpireAt().Before(time.Now()) {
+		return nil, fmt.Errorf("Token expired at %s.", d.ExpireAt().String())
+	}
+
 	if len(d.ClientId) == 0 {
-		return nil, simple_config.ERROR_CLIENT_NOT_EXISTS
+		return nil, fmt.Errorf("get authorize data error, client id: %s", d.ClientId)
 	}
 
 	d.Client = &model.Client{}
-	err = s.db.Model(d.Client).Where("client_id", d.ClientId).First(d.Client).Error
+	err = s.db.Model(d.Client).Where("id", d.ClientId).First(d.Client).Error
 	if err != nil {
-		return nil, simple_config.ERROR_CLIENT_NOT_EXISTS
+		return nil, fmt.Errorf("get authorize data error, client id: %s\nerror: %s", d.ClientId, err)
 	}
 
-	if d.ExpireAt().Before(time.Now()) {
-		return nil, fmt.Errorf("Token expired at %s.", d.ExpireAt().String())
+	if len(d.UserId) > 0 {
+		d.User = &model.User{}
+		if err := s.db.Model(d.User).Where("id", d.UserId).First(d.User).Error; err != nil {
+			return nil, fmt.Errorf("access client not exists, user id: %s", d.UserId)
+		}
+	} else if d.Client.NeedLogin {
+		return nil, fmt.Errorf("access client need login, user not exists, client id: %s", d.ClientId)
+	} else {
+		d.User = nil
 	}
 
 	return d, nil

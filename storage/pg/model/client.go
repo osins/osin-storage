@@ -1,10 +1,8 @@
 package model
 
 import (
-	"encoding/json"
 	"time"
 
-	"github.com/fatih/structs"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
@@ -23,7 +21,6 @@ type Client struct {
 
 // GetId method define
 func (d *Client) GetId() string {
-
 	return d.Id.String()
 }
 
@@ -52,17 +49,4 @@ func (d *Client) GetNeedRefresh() bool {
 func (d *Client) ClientSecretMatches(secret string) bool {
 
 	return d.Secret == secret
-}
-
-func (d *Client) MarshalJSON() ([]byte, error) {
-	m := structs.Map(d)
-	return json.Marshal(m)
-}
-
-func (d *Client) UnmarshalJSON(data []byte) error {
-	if err := json.Unmarshal(data, d); err != nil {
-		return err
-	}
-
-	return nil
 }
