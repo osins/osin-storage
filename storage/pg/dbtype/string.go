@@ -8,12 +8,16 @@ import (
 
 type DBString []string
 
+// Value method define
 func (j DBString) Value() (driver.Value, error) {
+
 	valueString, err := json.Marshal(j)
 	return string(valueString), err
 }
 
+// Scan method define
 func (j *DBString) Scan(value interface{}) error {
+
 	switch value := value.(type) {
 	case nil:
 		return nil

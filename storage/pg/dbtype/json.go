@@ -9,9 +9,12 @@ import (
 	"gorm.io/gorm/schema"
 )
 
+// DBJson type define
 type DBJson json.RawMessage
 
+// Value method define
 func (j DBJson) Value() (driver.Value, error) {
+
 	if len(j) == 0 {
 		return nil, nil
 	}
@@ -19,7 +22,9 @@ func (j DBJson) Value() (driver.Value, error) {
 	return json.RawMessage(j).MarshalJSON()
 }
 
+// Scan method define
 func (j *DBJson) Scan(value interface{}) error {
+
 	source, ok := value.([]byte)
 	if !ok {
 		return fmt.Errorf("Failed to unmarshal JSONB value: %s", value)
@@ -36,7 +41,9 @@ func (j *DBJson) Scan(value interface{}) error {
 	return nil
 }
 
+// GormDBDataType method define
 func (j *DBJson) GormDBDataType(db *gorm.DB, field *schema.Field) string {
+
 	// use field.Tag, field.TagSettings gets field's tags
 	// checkout https://github.com/go-gorm/gorm/blob/master/schema/field.go for all options
 

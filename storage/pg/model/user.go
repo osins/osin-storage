@@ -6,10 +6,9 @@ import (
 	"github.com/google/uuid"
 )
 
+// User define
 type User struct {
 	Id uuid.UUID `gorm:"primaryKey;->;<-:create;"`
-
-	ClientId string
 
 	Username string
 
@@ -21,4 +20,24 @@ type User struct {
 
 	// Date created
 	CreatedAt time.Time
+}
+
+func (s *User) GetId() string {
+	return s.Id.String()
+}
+
+func (s *User) GetUsername() string {
+	return s.Username
+}
+
+func (s *User) GetPassword() string {
+	return s.Password
+}
+
+func (s *User) GetMobile() string {
+	return s.Mobile
+}
+
+func (s *User) GetEmail() string {
+	return s.EMail
 }

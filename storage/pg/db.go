@@ -20,6 +20,7 @@ var gormInstance *gorm.DB
 var gormOnce sync.Once
 var migrated bool
 
+// DB func define
 func DB() *gorm.DB {
 
 	gormOnce.Do(func() {
@@ -31,11 +32,12 @@ func DB() *gorm.DB {
 				Colorful:      false,         // Disable color
 			},
 		)
-		db, err := gorm.Open(postgres.Open(getPostgresDSN()), &gorm.Config{
+
+		db, err := gorm.Open(postgres.Open(GetPostgresDSN()), &gorm.Config{
 			Logger:                                   newLogger,
 			DisableForeignKeyConstraintWhenMigrating: true,
 			NamingStrategy: schema.NamingStrategy{
-				TablePrefix:   "o2",                              // table name prefix, table for `User` would be `t_users`
+				TablePrefix:   "o2-",                             // table name prefix, table for `User` would be `t_users`
 				SingularTable: true,                              // use singular table name, table for `User` would be `user` with this option enabled
 				NameReplacer:  strings.NewReplacer("CID", "Cid"), // use name replacer to change struct/field name before convert it to db name
 			},
@@ -56,7 +58,7 @@ func DB() *gorm.DB {
 	return gormInstance
 }
 
-func getPostgresDSN() string {
+func GetPostgresDSN() string {
 	return fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Shanghai",
 		os.Getenv("PGDB_HOST"),
 		os.Getenv("PGDB_USER"),
@@ -70,8 +72,8 @@ func Migrate() {
 	var tables []interface{}
 	tables = append(tables,
 		&model.Client{},
-		&model.AuthorizeData{},
-		&model.AccessData{},
+		&model.Authorize{},
+		&model.Access{},
 		&model.User{},
 	)
 
