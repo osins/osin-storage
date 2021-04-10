@@ -25,8 +25,14 @@ type userStorage struct {
 
 // Create mothod define
 func (s *userStorage) Create(data simple_face.User) (err error) {
+	var id uuid.UUID
+	id, err = uuid.Parse(data.GetId())
+	if err != nil {
+		return err
+	}
+
 	d := &model.User{
-		Id:       uuid.MustParse(data.GetId()),
+		Id:       id,
 		Username: data.GetUsername(),
 		Password: data.GetPassword(),
 		EMail:    data.GetEmail(),

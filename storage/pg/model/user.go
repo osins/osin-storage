@@ -23,6 +23,10 @@ type User struct {
 }
 
 func (s *User) GetId() string {
+	if s == nil || s.Id == uuid.Nil {
+		return ""
+	}
+
 	return s.Id.String()
 }
 
