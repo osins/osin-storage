@@ -34,7 +34,7 @@ func (s *authorizeStorage) Get(code string) (simple_face.Authorize, error) {
 	}
 
 	if d.ExpireAt().Before(time.Now()) {
-		return nil, fmt.Errorf("Token expired at %s, create at %s. expires in %v", d.ExpireAt().String(), d.CreatedAt, d.ExpiresIn)
+		return nil, fmt.Errorf("authorize token expired at %s, create at %s. expires in %v", d.ExpireAt().String(), d.CreatedAt, d.ExpiresIn)
 	}
 
 	if len(d.ClientId) == 0 {
