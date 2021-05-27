@@ -1,6 +1,8 @@
 package pg
 
 import (
+	"fmt"
+
 	"github.com/google/uuid"
 	"github.com/osins/osin-simple/simple/model/face"
 	simple_face "github.com/osins/osin-simple/simple/model/face"
@@ -40,6 +42,7 @@ func (s *clientStorage) Get(clientId string) (simple_face.Client, error) {
 
 	err := s.db.Model(d).Where("id", clientId).First(d).Error
 	if err != nil {
+		fmt.Printf("\nsotrage get client[ %s ], err: %s\n", clientId, err)
 		return nil, err
 	}
 

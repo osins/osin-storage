@@ -33,11 +33,16 @@ func DB() *gorm.DB {
 			},
 		)
 
+		if os.Getenv("APP_DEBUG") == "true" {
+			fmt.Printf("osin-storage db dsn: %s", GetPostgresDSN())
+			fmt.Printf("\nosin-storage db table prefix: %s\n", os.Getenv("PGDB_TABLE_PREFIX"))
+		}
+
 		db, err := gorm.Open(postgres.Open(GetPostgresDSN()), &gorm.Config{
 			Logger:                                   newLogger,
 			DisableForeignKeyConstraintWhenMigrating: true,
 			NamingStrategy: schema.NamingStrategy{
-				TablePrefix:   "o2-",                             // table name prefix, table for `User` would be `t_users`
+				TablePrefix:   os.Getenv("PGDB_TABLE_PREFIX"),    // table name prefix, table for `User` would be `t_users`
 				SingularTable: true,                              // use singular table name, table for `User` would be `user` with this option enabled
 				NameReplacer:  strings.NewReplacer("CID", "Cid"), // use name replacer to change struct/field name before convert it to db name
 			},
