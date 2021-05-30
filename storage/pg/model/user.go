@@ -12,9 +12,11 @@ type User struct {
 
 	Username string
 
-	Password string `json:"-"`
+	Password []byte `json:"-"`
 
-	EMail string
+	Salt []byte `json:"-"`
+
+	EMail string `gorm:"column:email";`
 
 	Mobile string
 
@@ -34,8 +36,12 @@ func (s *User) GetUsername() string {
 	return s.Username
 }
 
-func (s *User) GetPassword() string {
+func (s *User) GetPassword() []byte {
 	return s.Password
+}
+
+func (s *User) GetSalt() []byte {
+	return s.Salt
 }
 
 func (s *User) GetMobile() string {

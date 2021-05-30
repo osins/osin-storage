@@ -1,6 +1,8 @@
 package pg
 
 import (
+	"fmt"
+
 	"github.com/google/uuid"
 	simple_face "github.com/osins/osin-simple/simple/model/face"
 	simple_storage "github.com/osins/osin-simple/simple/storage"
@@ -35,8 +37,13 @@ func (s *userStorage) Create(data simple_face.User) (err error) {
 		Id:       id,
 		Username: data.GetUsername(),
 		Password: data.GetPassword(),
+		Salt:     data.GetSalt(),
 		EMail:    data.GetEmail(),
 		Mobile:   data.GetMobile(),
+	}
+
+	if f, e := s.ExistsByCode(data.GetId(), data.GetUsername(), data.GetMobile(), data.GetEmail()); f {
+		return fmt.Errorf("user is exists. id: %s, e: %s", f, e)
 	}
 
 	return s.db.Model(d).Create(d).Error
@@ -50,6 +57,45 @@ func (s *userStorage) GetId(code string, password string) (string, error) {
 	} else {
 		return u.GetId(), err
 	}
+}
+
+// GetByPassword method define
+func (s *userStorage) ExistsByCode(id string, username string, mobile string, email string) (bool, error) {
+
+	count := int64(0)
+	zero := int64(0)
+
+	if err := s.db.Model(&model.User{}).Where(map[string]interface{}{
+		"id": id,
+	}).Or(map[string]interface{}{
+		"mobile": mobile,
+	}).Or(map[string]interface{}{
+		"username": username,
+	}).Or(map[string]interface{}{
+		"email": email,
+	}).Count(&count).Error; err != nil {
+		return true, err
+	}
+
+	return count > zero, nil
+}
+
+func (s *userStorage) GetByCode(code string) (simple_face.User, error) {
+	fmt.Printf("\nstorage user, get by code: %s\n", code)
+
+	u := &model.User{}
+
+	if err := s.db.Model(&model.User{}).Debug().Where(map[string]interface{}{
+		"mobile": code,
+	}).Or(map[string]interface{}{
+		"username": code,
+	}).Or(map[string]interface{}{
+		"email": code,
+	}).First(u).Error; err != nil {
+		return nil, err
+	}
+
+	return u, nil
 }
 
 // GetByPassword method define
