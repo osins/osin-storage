@@ -7,6 +7,7 @@ import (
 	simple_face "github.com/osins/osin-simple/simple/model/face"
 	simple_storage "github.com/osins/osin-simple/simple/storage"
 	"github.com/osins/osin-storage/storage/model"
+	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 )
 
@@ -43,7 +44,8 @@ func (s *userStorage) Create(data simple_face.User) (err error) {
 	}
 
 	if f, e := s.ExistsByCode(data.GetId(), data.GetUsername(), data.GetMobile(), data.GetEmail()); f {
-		return fmt.Errorf("user is exists. id: %s, e: %s", f, e)
+		logrus.WithFields(logrus.Fields{"result": f, "error": e}).Error("user is exists.")
+		return fmt.Errorf("user is exists.")
 	}
 
 	return s.db.Model(d).Create(d).Error
