@@ -16,7 +16,7 @@ type User struct {
 
 	Salt []byte `json:"-"`
 
-	EMail string `gorm:"column:email";`
+	EMail string `gorm:"column:email;"`
 
 	Mobile string
 

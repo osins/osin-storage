@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/osins/osin-simple/simple/model/face"
-	"github.com/osins/osin-storage/storage/pg/dbtype"
+	"github.com/osins/osin-storage/storage/dbtype"
 )
 
 // Authorize define

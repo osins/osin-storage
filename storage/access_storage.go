@@ -1,4 +1,4 @@
-package pg
+package storage
 
 import (
 	"fmt"
@@ -7,7 +7,7 @@ import (
 	simple_config "github.com/osins/osin-simple/simple/config"
 	simple_face "github.com/osins/osin-simple/simple/model/face"
 	simple_storage "github.com/osins/osin-simple/simple/storage"
-	"github.com/osins/osin-storage/storage/pg/model"
+	"github.com/osins/osin-storage/storage/model"
 	"gorm.io/gorm"
 )
 
