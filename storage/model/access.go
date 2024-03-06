@@ -8,29 +8,22 @@ import (
 
 // Access define
 type Access struct {
+	ClientId string
+	Client   *Client
+	UserId   string
+	User     *User
+
 	// Access token
 	AccessToken string `gorm:"primaryKey;->;<-:create;"`
-
 	// Refresh Token. Can be blank
 	RefreshToken string
-
-	ClientId string
-
-	Client *Client
-
-	UserId string
-
-	User *User
-
 	// Token expiration in seconds
 	ExpiresIn int32
-
 	// Requested scope
 	Scope string
 
 	// Date created
 	CreatedAt time.Time
-
 	// Date created
 	DeletedAt time.Time
 }

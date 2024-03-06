@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/osins/osin-storage/storage/model"
+	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
@@ -37,8 +38,11 @@ func DB() *gorm.DB {
 		)
 
 		if os.Getenv("APP_DEBUG") == "true" {
-			fmt.Printf("osin-storage db dsn: %s", GetMySQLDSN())
-			fmt.Printf("\nosin-storage db table prefix: %s\n", os.Getenv("DB_TABLE_PREFIX"))
+			logrus.WithFields(logrus.Fields{
+				"debug":           true,
+				"db table prefix": os.Getenv("DB_TABLE_PREFIX"),
+				"dsn":             *gormDialector,
+			}).Debug("osin-storage db dsn")
 		}
 
 		db, err := gorm.Open(*gormDialector, &gorm.Config{

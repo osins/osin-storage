@@ -9,14 +9,14 @@ import (
 
 // Client define
 type Client struct {
-	Id          uuid.UUID `gorm:"primaryKey;->;<-:create;"`
-	Secret      string
-	RedirectUri string
+	Id          uuid.UUID `gorm:"primaryKey;->;<-:create;type:char(36);"`
+	Secret      string    `gorm:"type:varchar(256);"`
+	RedirectUri string    `gorm:"type:varchar(1024);"`
+	NeedLogin   bool
+	NeedRefresh bool
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 	DeletedAt   gorm.DeletedAt `gorm:"index"`
-	NeedLogin   bool
-	NeedRefresh bool
 }
 
 // GetId method define

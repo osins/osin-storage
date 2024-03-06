@@ -7,4 +7,5 @@ export DB_HOST="localhost"
 export DB_PORT="3306"
 export DB_DATABASE="test_db"
 
+go mod tidy
 go test -v $1

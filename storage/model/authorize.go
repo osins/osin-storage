@@ -10,7 +10,7 @@ import (
 // Authorize define
 type Authorize struct {
 	// Authorization code
-	Code string `gorm:"primaryKey;->;<-:create;"`
+	Code string `gorm:"primaryKey;->;<-:create;type:char(36)"`
 
 	ClientId string
 
@@ -25,18 +25,13 @@ type Authorize struct {
 	ExpiresIn int32
 
 	// Requested scope
-	Scope string
+	Scope string `gorm:"type:varchar(1024)"`
 
 	// Redirect Uri from request
-	RedirectUri string
+	RedirectUri string `gorm:"type:varchar(1024)"`
 
 	// State data from request
-	State string
-
-	// Date created
-	CreatedAt time.Time
-
-	DeletedAt time.Time
+	State string `gorm:"type:varchar(256)"`
 
 	// Data to be passed to storage. Not used by the library.
 	UserData dbtype.DBJson `sql:"type:jsonb"`
@@ -46,6 +41,11 @@ type Authorize struct {
 
 	// Optional code_challenge_method as described in rfc7636
 	CodeChallengeMethod string
+
+	// Date created
+	CreatedAt time.Time
+
+	DeletedAt time.Time
 }
 
 // GetCode func define

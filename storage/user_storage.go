@@ -1,6 +1,7 @@
 package storage
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/google/uuid"
@@ -52,13 +53,42 @@ func (s *userStorage) Create(data simple_face.User) (err error) {
 }
 
 // GetId method define
-func (s *userStorage) GetId(code string, password string) (string, error) {
-
-	if u, err := s.GetByPassword(code, password); err != nil {
+func (s *userStorage) GetId(code string) (string, error) {
+	if u, err := s.GetByCode(code); err != nil && u != nil {
 		return "", err
 	} else {
 		return u.GetId(), err
 	}
+}
+
+func existsByCode(db *gorm.DB, id string, username string, mobile string, email string) (*gorm.DB, error) {
+	if len(id) == 0 {
+		return nil, errors.New("id is null")
+	}
+
+	query := db.Model(&model.User{}).Where(map[string]interface{}{
+		"id": id,
+	})
+
+	if username != "" {
+		query.Or(map[string]interface{}{
+			"username": username,
+		})
+	}
+
+	if mobile != "" {
+		query.Or(map[string]interface{}{
+			"mobile": mobile,
+		})
+	}
+
+	if email != "" {
+		query.Or(map[string]interface{}{
+			"email": email,
+		})
+	}
+
+	return query, nil
 }
 
 // GetByPassword method define
@@ -67,15 +97,29 @@ func (s *userStorage) ExistsByCode(id string, username string, mobile string, em
 	count := int64(0)
 	zero := int64(0)
 
-	if err := s.db.Model(&model.User{}).Where(map[string]interface{}{
-		"id": id,
-	}).Or(map[string]interface{}{
-		"mobile": mobile,
-	}).Or(map[string]interface{}{
-		"username": username,
-	}).Or(map[string]interface{}{
-		"email": email,
-	}).Count(&count).Error; err != nil {
+	query, err := existsByCode(s.db, id, username, mobile, email)
+	if err != nil {
+		return true, err
+	}
+
+	if err := query.Count(&count).Error; err != nil || count > 0 {
+		sql := s.db.ToSQL(func(tx *gorm.DB) *gorm.DB {
+			q, err := existsByCode(tx, id, username, mobile, email)
+			if err != nil {
+				return tx
+			}
+
+			return q.Count(&count)
+		})
+
+		logrus.WithFields(logrus.Fields{
+			"sql":      sql,
+			"id":       id,
+			"username": username,
+			"mobile":   mobile,
+			"email":    email,
+		}).Debug("user is exists, sql out")
+
 		return true, err
 	}
 
@@ -98,25 +142,6 @@ func (s *userStorage) GetByCode(code string) (simple_face.User, error) {
 	}
 
 	return u, nil
-}
-
-// GetByPassword method define
-func (s *userStorage) GetByPassword(code string, password string) (simple_face.User, error) {
-
-	d := &model.User{}
-
-	err := s.db.Where(map[string]interface{}{
-		"username": code,
-		"password": password,
-	}).Or(map[string]interface{}{
-		"mobile":   code,
-		"password": password,
-	}).Or(map[string]interface{}{
-		"id":       code,
-		"password": password,
-	}).First(d).Error
-
-	return d, err
 }
 
 // GetUser method define

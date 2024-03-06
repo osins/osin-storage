@@ -11,6 +11,8 @@ require (
 )
 
 require (
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
+	github.com/fatih/structs v1.1.0 // indirect
 	github.com/go-sql-driver/mysql v1.7.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
@@ -19,4 +21,4 @@ require (
 	golang.org/x/sys v0.13.0 // indirect
 )
 
-// replace github.com/osins/osin-simple => D:\works\codes\my\osin-simple
+replace github.com/osins/osin-simple => /root/my/osin-simple
